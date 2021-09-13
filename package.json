@@ -1,0 +1,30 @@
+{
+  "name": "whatsapp-dialogflow",
+  "version": "1.0.0",
+  "description": "",
+  "main": "node app.js",
+  "scripts": {
+    "dev": "nodemon server.js -e *",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "actions-on-google": "^3.0.0",
+    "cors": "^2.8.5",
+    "dialogflow": "^1.2.0",
+    "dialogflow-fulfillment": "^0.6.1",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "googleapis": "^85.0.0",
+    "helmet": "^4.6.0",
+    "pb-util": "^1.0.1",
+    "uuid": "^8.3.2",
+    "venom-bot": "^3.1.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  }
+}
