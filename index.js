@@ -4,9 +4,9 @@ const cors = require('cors');
 const chatbot = require('./wapp.js');
 const webhook = require('./webhook.js');
 const helmet = require('helmet');
-require('dotenv').config({path:'./config/.env'}); //  Para el uso de las variables en el archivo .env
+require('dotenv').config({path:'.env'}); //  Para el uso de las variables en el archivo .env
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 80;
 const IP = process.env.IP || "127.0.0.1";
 
 chatbot.startBot(); // Inicia el bot de whatsapp
