@@ -4,8 +4,8 @@ const dialogflow = require('./dialogflow.js');
 const googlesheet = require('./googlesheet.js')
 
 const sessionMap = new Map(); // Gestion de sesiones
-const grupoAdmin = "51997300013-1627431529@g.us";
-//const grupoAdmin = "51997793848@c.us";
+//const grupoAdmin = "51997300013-1627431529@g.us";
+const grupoAdmin = "51997793848@c.us";
 const miNumero = "51997300013@c.us";
 const jessNumero = "51997793848@c.us";
 const catalogo = 'https://wa.me/c/51949740763';
@@ -14,12 +14,22 @@ const buttons = [
   {buttonId: 'id2', buttonText: {displayText: 'Hacer un Pedido'}, type: 1},
   {buttonId: 'id3', buttonText: {displayText: 'Hablar a un Asesor'}, type: 1}
 ];
+const chromiumArgs = [
+  '--disable-web-security', '--no-sandbox', '--disable-web-security',
+  '--aggressive-cache-discard', '--disable-cache', '--disable-application-cache',
+  '--disable-offline-load-stale-cache', '--disk-cache-size=0',
+  '--disable-background-networking', '--disable-default-apps', '--disable-extensions',
+  '--disable-sync', '--disable-translate', '--hide-scrollbars', '--metrics-recording-only',
+  '--mute-audio', '--no-first-run', '--safebrowsing-disable-auto-update',
+  '--ignore-certificate-errors', '--ignore-ssl-errors', '--ignore-certificate-errors-spki-list'
+];
 var contexto = null;
 var waStatus;
 
 function startBot(){ 
   venom
     .create()
+//    .create('session', (base64Qrimg, asciiQR, attempts) => {}, (statusSession, session) => {}, {disableWelcome: true, disableSpins: true, browserArgs: chromiumArgs })
     .then((client) => start(client))
     .catch((erro) => {
       console.log(erro);
