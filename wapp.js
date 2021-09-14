@@ -28,8 +28,10 @@ var waStatus;
 
 function startBot(){ 
   venom
-    .create()
+//    .create()
 //    .create('session', (base64Qrimg, asciiQR, attempts) => {}, (statusSession, session) => {}, {disableWelcome: true, disableSpins: true, browserArgs: chromiumArgs })
+    .create( 'session', (base64Qrimg, asciiQR, attempts) => {}, (statusSession, session) => {}, {disableWelcome: true, disableSpins: true, useChrome: false, browserArgs: ['--no-sandbox'] } )  
+//  .create('session', (base64Qrimg, asciiQR, attempts) => {}, (statusSession, session) => {}, {disableWelcome: true, disableSpins: true, browserArgs: chromiumArgs })
     .then((client) => start(client))
     .catch((erro) => {
       console.log(erro);
