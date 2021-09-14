@@ -1,12 +1,13 @@
 const venom = require('venom-bot');
 const uuid = require("uuid");
 const dialogflow = require('./dialogflow.js');
-const googlesheet = require('./googlesheet.js')
+//const googlesheet = require('./googlesheet.js')
+const googlesheet = require('./spreadsheet.js')
 
 const sessionMap = new Map(); // Gestion de sesiones
 //const grupoAdmin = "51997300013-1627431529@g.us";
-const grupoAdmin = "51997793848@c.us";
-const miNumero = "51997300013@c.us";
+//const grupoAdmin = "51997793848@c.us";
+const grupoAdmin = "51997300013@c.us";
 const jessNumero = "51997793848@c.us";
 const catalogo = 'https://wa.me/c/51949740763';
 const buttons = [            
@@ -51,14 +52,14 @@ function start(client) {
       // Debe tomar el numero telefonico y buscarlo en el googlesheet de Clientes
       let telefono =  message.from.split("@")[0]; // Obtiene el telefono del sender ...
       sessionMap.get(message.from).cliente.Telefono = telefono; // ... y lo guarda
-      let json = await googlesheet.getClients(); // Obtiene la lista de clientes del google sheets
-
+      let clientes = await googlesheet.getClients(); // Obtiene la lista de clientes del google sheets
         // Busca si en el excel esta el numero y si lo encuentra lo guarda 
-        for (var i = 1; i < json.values.length; i++) {
-            if( json.values[i][0] === telefono ){ // Cuando lo encuentre lo guarda
-                sessionMap.get(message.from).cliente.Nombre = json.values[i][1];
-                sessionMap.get(message.from).cliente.Apellido = json.values[i][2];
-                sessionMap.get(message.from).cliente.Ciudad = json.values[i][3];
+        for (cliente of clientes) {
+            console.log(cliente);
+            if( cliente.Telefono === telefono ){ // Cuando lo encuentre lo guarda
+                sessionMap.get(message.from).cliente.Nombre = cliente.Nombre;
+                sessionMap.get(message.from).cliente.Apellido = cliente.Apellido;
+                sessionMap.get(message.from).cliente.Ciudad = cliente.Ciudad;
                 sessionMap.get(message.from).cliente.found = true;
                 break;
             }
@@ -108,7 +109,7 @@ function start(client) {
           case '3.NuevoCliente.SI':
             //console.log('REGISTRAR NUEVO CLIENTE!');
             guardaClienteMap( sessionMap.get(message.from).cliente, payload ); // Guarda el cliente en el Mapa
-            crearClienteGS(sessionMap.get(message.from).cliente);
+            googlesheet.setClient(sessionMap.get(message.from).cliente);
             await sendClienteToGroup(client, grupoAdmin, sessionMap.get(message.from)); // Envia cliente al grupo
             await sendContactToWhatsapp(client, grupoAdmin, message.from, sessionMap.get(message.from ));
             break;
@@ -248,14 +249,7 @@ async function sendVentaToGroup( client, to, session ) {
   });
 }
 
-/**
- * Envia una lista de opciones
- * @param {cliente google} client 
- * @param {estructura del mensaje} message 
- * @param {texto de titulo} titulo 
- * @param {arraglo de botones} buttons 
- * @param {descripcion opcional} descripcion 
- */
+// Envia una lista de opciones
 async function sendButtonToWhatsapp(client, to, titulo, buttons,descripcion) {
   //console.log('Enviando botones');
   await client

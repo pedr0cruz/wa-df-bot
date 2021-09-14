@@ -1,10 +1,16 @@
 /*** Ver detalles en: https://youtu.be/PFJNJQCU_lo
 */
 const  {google} = require('googleapis');
+const { GoogleSpreadsheet } = require('google-spreadsheet');
+const config = require("./config/config");
 
 // Datos globales
 const spreadsheetId = '1MCJZJ2so2TYebC9KAkrOQTKh0Cfdik_xKS-AqbEt6Yg'; // ID obtenido de la url del archivo:https://docs.google.com/spreadsheets/d/1MCJZJ2so2TYebC9KAkrOQTKh0Cfdik_xKS-AqbEt6Yg/edit#gid=2040434871
 // const api_key = "AIzaSyAC3WbVG4xv_Lc3kJj9XlHyFyIp-7dBEqc"; // No se utiliza
+const credentials = {
+    client_email: config.GOOGLE_CLIENT_EMAIL,
+    private_key: config.GOOGLE_PRIVATE_KEY,
+};
 
 async function getClients() 
 {
