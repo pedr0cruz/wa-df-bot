@@ -2,7 +2,7 @@ const http = require('http');
 const express = require('express');
 const cors = require('cors');
 const chatbot = require('./wapp.js');
-const webhook = require('./webhook.js');
+// const webhook = require('./webhook.js');
 const helmet = require('helmet');
 require('dotenv').config({path:'.env'}); //  Para el uso de las variables en el archivo .env
 
@@ -21,9 +21,9 @@ app.get("/", (req, res) => {
   return res.send( "Chatbot: " + chatbot.WAStatus() ); }
 );
 
-app.post("/webhook", express.json(), (req, res) => {
-    webhook.dialogflowFulfillment(req, res); }
-  );
+//app.post("/webhook", express.json(), (req, res) => {
+//    webhook.dialogflowFulfillment(req, res); }
+//  );
 
 const serverHttp = http.createServer(app); 
 serverHttp.listen(port, IP );

@@ -57,7 +57,7 @@ function start(client) {
         contexto = "cliente_existe";
       else
         contexto = "cliente_nuevo";  
-      console.log('BUSCANDO CLIENTE: ', contexto);
+      // console.log('BUSCANDO CLIENTE: ', contexto);
     }
     else contexto = null;
   
@@ -85,8 +85,6 @@ function start(client) {
         console.log('\nIntencion: ', Intent, '\nContextos: ', contexnames, '\nPaso Final: ', allParams); 
 
         // Realiza acciones posteriores de Contextos
-//        if( contexnames.indexOf('venta') > 0 ) 
-//          await sendMessageToGroup(client, jessNumero /*grupoAdmin*/, sessionMap.get(message.from)); // Envia mensaje al grupo
         if( contexnames.indexOf('ver_catalogo') > 0 ) 
           await sendLinkToWhatsapp(client, message.from, '', catalogo);// Verifica si debe mostrar catalogo
         if( contexnames.indexOf('ver_opciones') > 0 ) 
@@ -139,7 +137,7 @@ function start(client) {
   
   // Detecta la llamada telefonica
   client.onIncomingCall(async (call) => {
-    console.log(call);
+    //console.log(call);
     client.sendText(call.peerJid, "Lo siento, soy un robot y no puedo reponder llamadas.\n Escribe *Hola* para conversar!");
   });
   
@@ -238,11 +236,6 @@ async function sendVentaToGroup( client, to, session ) {
 
 /**
  * Envia una lista de opciones
- * @param {cliente google} client 
- * @param {estructura del mensaje} message 
- * @param {texto de titulo} titulo 
- * @param {arraglo de botones} buttons 
- * @param {descripcion opcional} descripcion 
  */
 async function sendButtonToWhatsapp(client, to, titulo, buttons,descripcion) {
   //console.log('Enviando botones');
