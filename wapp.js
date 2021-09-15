@@ -4,10 +4,10 @@ const dialogflow = require('./dialogflow.js');
 const googlesheet = require('./googlesheet.js')
 
 const sessionMap = new Map(); // Gestion de sesiones
-//const grupoAdmin = "51997300013-1627431529@g.us";
+const grupoAdmin = "51997300013-1627431529@g.us";
 //const grupoAdmin = "51997793848@c.us";
-const grupoAdmin = "51997300013@c.us";
-const jessNumero = "51997793848@c.us";
+//const grupoAdmin = "51997300013@c.us";
+//const jessNumero = "51997793848@c.us";
 const catalogo = 'https://wa.me/c/51949740763';
 const buttons = [            
   {buttonId: 'id1', buttonText: {displayText: 'Ver Ofertas'}, type: 1},
