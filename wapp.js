@@ -1,7 +1,6 @@
 const venom = require('venom-bot');
 const uuid = require("uuid");
 const dialogflow = require('./dialogflow.js');
-//const googlesheet = require('./googlesheet.js')
 const googlesheet = require('./spreadsheet.js')
 
 const sessionMap = new Map(); // Gestion de sesiones
@@ -52,19 +51,17 @@ function start(client) {
       // Debe tomar el numero telefonico y buscarlo en el googlesheet de Clientes
       let telefono =  message.from.split("@")[0]; // Obtiene el telefono del sender ...
       sessionMap.get(message.from).cliente.Telefono = telefono; // ... y lo guarda
-      let clientes = await googlesheet.getClients(); // Obtiene la lista de clientes del google sheets
-        // Busca si en el excel esta el numero y si lo encuentra lo guarda 
-        for (cliente of clientes) {
-            console.log(cliente);
-            if( cliente.Telefono === telefono ){ // Cuando lo encuentre lo guarda
-                sessionMap.get(message.from).cliente.Nombre = cliente.Nombre;
-                sessionMap.get(message.from).cliente.Apellido = cliente.Apellido;
-                sessionMap.get(message.from).cliente.Ciudad = cliente.Ciudad;
-                sessionMap.get(message.from).cliente.found = true;
-                break;
-            }
-        }
-
+      let clientes = await googlesheet.getData('Clientes'); // Obtiene la lista de clientes del google sheets
+      // Busca si en el excel esta el numero y si lo encuentra lo guarda 
+      for (cliente of clientes) {
+          if( cliente.Telefono === telefono ){ // Cuando lo encuentre lo guarda
+              sessionMap.get(message.from).cliente.Nombre = cliente.Nombre;
+              sessionMap.get(message.from).cliente.Apellido = cliente.Apellido;
+              sessionMap.get(message.from).cliente.Ciudad = cliente.Ciudad;
+              sessionMap.get(message.from).cliente.found = true;
+              break;
+          }
+      }
       // Estable el contexto en funcion al cliente encontrado
       if( sessionMap.get(message.from).cliente.found ) 
         contexto = "cliente_existe";
@@ -98,8 +95,6 @@ function start(client) {
         console.log('\nIntencion: ', Intent, '\nContextos: ', contexnames, '\nPaso Final: ', allParams); 
 
         // Realiza acciones posteriores de Contextos
-//        if( contexnames.indexOf('venta') > 0 ) 
-//          await sendMessageToGroup(client, jessNumero /*grupoAdmin*/, sessionMap.get(message.from)); // Envia mensaje al grupo
         if( contexnames.indexOf('ver_catalogo') > 0 ) 
           await sendLinkToWhatsapp(client, message.from, '', catalogo);// Verifica si debe mostrar catalogo
         if( contexnames.indexOf('ver_opciones') > 0 ) 
@@ -109,14 +104,14 @@ function start(client) {
           case '3.NuevoCliente.SI':
             //console.log('REGISTRAR NUEVO CLIENTE!');
             guardaClienteMap( sessionMap.get(message.from).cliente, payload ); // Guarda el cliente en el Mapa
-            googlesheet.setClient(sessionMap.get(message.from).cliente);
+            googlesheet.setData('Clientes', sessionMap.get(message.from).cliente); // Guarda el cliente en Google Sheet
             await sendClienteToGroup(client, grupoAdmin, sessionMap.get(message.from)); // Envia cliente al grupo
-            await sendContactToWhatsapp(client, grupoAdmin, message.from, sessionMap.get(message.from ));
+            await sendContactToWhatsapp(client, grupoAdmin, message.from, sessionMap.get(message.from )); // Envia el contacto del cliente al grupo
             break;
           case '6.Pedido':
             //console.log('REGISTRAR NUEVO PEDIDO!');
-            crearPedidoGS(sessionMap.get(message.from));
-            await sendVentaToGroup(client, grupoAdmin, sessionMap.get(message.from)); // Envia mensaje al grupo
+            crearPedidoGS(sessionMap.get(message.from)); // Guarda la venta en el Google Sheet
+            await sendVentaToGroup(client, grupoAdmin, sessionMap.get(message.from)); // Envia venta al grupo
             break;
           default:
             break;
@@ -314,9 +309,20 @@ function crearPedidoGS(session) {
   let Estado = "NUEVO PEDIDO";
   let Codigo =  session.payload.outputContexts[0].parameters.fields['CasaCodigo.original'].stringValue.toUpperCase();
   
+  const venta = {
+    Telefono: session.cliente.Telefono,
+    Nombre: session.cliente.Nombre + " " + session.cliente.Apellido,
+    Fecha,
+    Dias: session.payload.parameters.fields.CasaDias.numberValue,
+    Personas: session.payload.parameters.fields.CasaCantidad.numberValue,
+    Comentarios: session.payload.parameters.fields.CasaComentario.stringValue,
+    Estado: "NUEVO PEDIDO",
+    Codigo:  session.payload.outputContexts[0].parameters.fields['CasaCodigo.original'].stringValue.toUpperCase(),
+  }
+
   // Registra la venta en el excel
-   values = {Telefono, Nombre, Estado, Fecha, Codigo, Dias, Personas, Comentarios };
-  googlesheet.setVenta( values );
+   let values = [Telefono, Nombre, Estado, Fecha, Codigo, Dias, Personas, Comentarios ];
+   googlesheet.setData( 'Ventas', venta );
 }
 
 function WAStatus() {
