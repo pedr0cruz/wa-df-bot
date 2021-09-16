@@ -2,9 +2,13 @@ const venom = require('venom-bot');
 const uuid = require("uuid");
 const dialogflow = require('./dialogflow.js');
 const googlesheet = require('./googlesheet.js')
+require('dotenv').config({path:'.env'}); //  Para el uso de las variables en el archivo .env
+
+const port = process.env.PORT || 80;
+const IP = process.env.IP || "127.0.0.1";
 
 const sessionMap = new Map(); // Gestion de sesiones
-const grupoAdmin = "51997300013-1627431529@g.us";
+const grupoAdmin = process.env.GROUP_NUMBER;
 //const grupoAdmin = "51997793848@c.us";
 //const grupoAdmin = "51997300013@c.us";
 //const jessNumero = "51997793848@c.us";
@@ -70,6 +74,7 @@ function start(client) {
 
     // Envia las respuestas de Dialogflow de vuelta al WA
     let responses = payload.fulfillmentMessages;
+    if( responses === undefined ) return;
     for (const response of responses) {
       await sendMessageToWhatsapp(client, message.from, response.text.text[0]); // Envia al WA la respuesta de Dialogflow
     }

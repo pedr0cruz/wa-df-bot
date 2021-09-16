@@ -62,12 +62,12 @@ async function sendToDialogFlow(msg, sessionId, params, context) {
     }
 
     let defaultResponses = [];
-    if (result.action !== "input.unknown") {
+    if (result.action !== "input.unknown" && result.fulfillmentMessages !== undefined ) {
       result.fulfillmentMessages.forEach((element) => {
           defaultResponses.push(element);
       });
     }
-    if (defaultResponses.length === 0) {
+    if (defaultResponses.length === 0 && result.fulfillmentMessages !== undefined ) {
       result.fulfillmentMessages.forEach((element) => {
         if (element.platform === "PLATFORM_UNSPECIFIED") {
           defaultResponses.push(element);
