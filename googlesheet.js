@@ -4,7 +4,6 @@ const  {google} = require('googleapis');
 
 // Datos globales
 const spreadsheetId = '1MCJZJ2so2TYebC9KAkrOQTKh0Cfdik_xKS-AqbEt6Yg'; // ID obtenido de la url del archivo:https://docs.google.com/spreadsheets/d/1MCJZJ2so2TYebC9KAkrOQTKh0Cfdik_xKS-AqbEt6Yg/edit#gid=2040434871
-// const api_key = "AIzaSyAC3WbVG4xv_Lc3kJj9XlHyFyIp-7dBEqc"; // No se utiliza
 
 async function getClients() 
 {
