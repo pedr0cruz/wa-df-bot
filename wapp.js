@@ -9,9 +9,6 @@ const IP = process.env.IP || "127.0.0.1";
 
 const sessionMap = new Map(); // Gestion de sesiones
 const grupoAdmin = process.env.GROUP_NUMBER;
-//const grupoAdmin = "51997793848@c.us";
-//const grupoAdmin = "51997300013@c.us";
-//const jessNumero = "51997793848@c.us";
 const catalogo = 'https://wa.me/c/51949740763';
 const buttons = [            
   {buttonId: 'id1', buttonText: {displayText: 'Ver Ofertas'}, type: 1},
