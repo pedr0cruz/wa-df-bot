@@ -79,8 +79,7 @@ async function sendToDialogFlow(msg, sessionId, params, context) {
     return result;
     // console.log("se enviara el resultado: ", result);
   } catch (e) {
-    console.log("error");
-    console.log(e);
+    console.log( "Error onMesseage: ", e );
   }
 }
 

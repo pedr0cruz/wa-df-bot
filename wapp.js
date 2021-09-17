@@ -90,7 +90,7 @@ function start(client) {
         if( contexnames.indexOf('ver_catalogo') > 0 ) 
           await sendLinkToWhatsapp(client, message.from, '', catalogo);// Verifica si debe mostrar catalogo
         if( contexnames.indexOf('ver_opciones') > 0 ) 
-          await sendButtonToWhatsapp(client, message.from, 'Selecciona un botón para...', buttons); // Verifica si debe mostrar opciones
+          await sendButtonToWhatsapp(client, message.from, 'Selecciona un botón para...', buttons,''); // Verifica si debe mostrar opciones
         // Realiza acciones posteriores de Intent
         switch ( Intent ) {
           case '3.NuevoCliente.SI':
@@ -110,7 +110,7 @@ function start(client) {
         };
       }
     } catch (error) {
-      client.close();
+      // client.close();
       console.error(error.message);
     }; 
   });
@@ -240,15 +240,15 @@ async function sendVentaToGroup( client, to, session ) {
  * Envia una lista de opciones
  */
 async function sendButtonToWhatsapp(client, to, titulo, buttons,descripcion) {
-  //console.log('Enviando botones');
   await client
     .sendButtons(to, titulo , buttons, descripcion )
     .then((result) => {
-    // console.log('Result: ', result); //return object success
+      // console.log('Result: ', result); //return object success
     })
     .catch((erro) => {
       console.error( '\n\nError enviando botones a WA: ', erro); //return object error
     });
+    // console.log('Enviando botones');
 }
 
 // Automatically sends a link with the auto generated link preview. You can also add a custom message to be added.
