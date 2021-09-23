@@ -18,8 +18,9 @@ app.use(cors());
 app.use(helmet());
 
 app.get("/", (req, res) => {
-  return res.send( "Chatbot: " + chatbot.WAStatus() ); }
-);
+  res.status(200) // sends an "OK" response;
+  return res.send( "Chatbot: " + chatbot.WAStatus() ); 
+});
 
 //app.post("/webhook", express.json(), (req, res) => {
 //    webhook.dialogflowFulfillment(req, res); }
@@ -28,6 +29,6 @@ app.get("/", (req, res) => {
 const serverHttp = http.createServer(app); 
 serverHttp.listen(port, IP );
 //app.listen( port, () => { 
-console.log( "Servidor corriendo en puerto " + port + "!" ); 
+console.log( "Servidor corriendo en puerto: " + port + "!" ); 
 //});
 
