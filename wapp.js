@@ -11,9 +11,9 @@ const sessionMap = new Map(); // Gestion de sesiones
 const grupoAdmin = process.env.GROUP_NUMBER;
 const catalogo = 'https://wa.me/c/51949740763';
 const buttons = [            
-  {buttonId: 'id1', buttonText: {displayText: 'Ver Ofertas'}, type: 1},
+  {buttonId: 'id1', buttonText: {displayText: 'Ver Catálogo'}, type: 1},
   {buttonId: 'id2', buttonText: {displayText: 'Hacer un Pedido'}, type: 1},
-  {buttonId: 'id3', buttonText: {displayText: 'Hablar a un Asesor'}, type: 1}
+  {buttonId: 'id3', buttonText: {displayText: 'Preguntar a un Asesor'}, type: 1}
 ];
 var contexto = null;
 var waStatus;
@@ -98,6 +98,10 @@ function start(client) {
             guardaClienteMap( sessionMap.get(message.from).cliente, payload ); // Guarda el cliente en el Mapa
             crearClienteGS(sessionMap.get(message.from).cliente);
             await sendClienteToGroup(client, grupoAdmin, sessionMap.get(message.from)); // Envia cliente al grupo
+            await sendContactToWhatsapp(client, grupoAdmin, message.from, sessionMap.get(message.from ));
+            break;
+          case '5.Asesor':
+            await sendPreguntaToGroup(client, grupoAdmin, sessionMap.get(message.from)); // Envia la pregunta al grupo
             await sendContactToWhatsapp(client, grupoAdmin, message.from, sessionMap.get(message.from ));
             break;
           case '6.Pedido':
@@ -235,6 +239,30 @@ async function sendVentaToGroup( client, to, session ) {
     console.error('\n\nError enviando mensaje Grupo: ', erro); //return object error
   });
 }
+
+ // Envia pregunta al grupo
+ async function sendPreguntaToGroup(  client,  to, session ){
+  // toma los datos de la consulta
+  let Telefono = session.cliente.Telefono;
+  let Nombre = session.cliente.Nombre + " " + session.cliente.Apellido;
+  let Pregunta = session.payload.parameters.fields.Pregunta.stringValue;
+
+  let mensageToAdmin = "Un cliente ha preguntado:" +
+  "\n  Telefono: +" + Telefono +
+  "\n  Nombre: " + Nombre +
+  "\n  Pregunta: " + Pregunta +
+  "\n\nPor favor contactarlo. Gracias!";
+
+  await client
+    .sendText(to, mensageToAdmin )
+    .then((result) => {
+      // console.log('Result: ', result); //return object success
+    })
+    .catch((erro) => {
+      console.error('\n\nError enviando cliente Grupo: ', erro); //return object error
+    });
+}
+
 
 /**
  * Envia una lista de opciones
